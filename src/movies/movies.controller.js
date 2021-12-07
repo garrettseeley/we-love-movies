@@ -1,10 +1,10 @@
-const moviesService = require("./movies.service");
+const service = require("./movies.service");
 const asyncErrorBoundary = require("../errors/asyncErrorBoundary");
 const mapProperties = require("../utils/map-properties");
 
 async function movieExists(req, res, next) {
   const { movieId } = req.params;
-  const movie = await moviesService.read(movieId);
+  const movie = await service.read(movieId);
   if (movie) {
     res.locals.movieId = movieId;
     res.locals.movie = movie;
@@ -20,12 +20,12 @@ function read(req, res, next) {
 async function list(req, res, next) {
   const showing = req.query.is_showing;
 
-  const data = await moviesService.list(showing);
+  const data = await service.list(showing);
   res.json({ data });
 }
 
 async function listTheaters(req, res, next) {
-  const data = await moviesService.listTheaters(res.locals.movieId);
+  const data = await service.listTheaters(res.locals.movieId);
   res.json({ data });
 }
 
@@ -39,7 +39,7 @@ const addCritic = mapProperties({
 })
 
 async function listReviews(req, res, next) {
-  const reviews = await moviesService.listReviews(res.locals.movieId);
+  const reviews = await service.listReviews(res.locals.movieId);
   const data = reviews.map(review => addCritic(review))
   res.json({ data });
 }
